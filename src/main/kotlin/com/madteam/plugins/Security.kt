@@ -6,11 +6,13 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.madteam.security.token.TokenConfig
 import io.ktor.server.application.*
+import io.ktor.server.config.*
 
 fun Application.configureSecurity(config: TokenConfig) {
+    val environment = ApplicationConfig(null)
     authentication {
         jwt {
-            realm = this@configureSecurity.environment.config.property("jwt.realm").getString()
+            realm = environment.property("jwt.realm").getString()
             verifier(
                 JWT
                     .require(Algorithm.HMAC256(config.secret))

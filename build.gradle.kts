@@ -9,6 +9,7 @@ val commons_codec_version: String by project
 plugins {
     application
     kotlin("jvm") version "1.9.21"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.21"
     id("io.ktor.plugin") version "2.3.7"
 }
 
@@ -44,6 +45,7 @@ dependencies {
 
     //Serialization
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor_version")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
 
     //Call logging
     implementation("io.ktor:ktor-server-call-logging-jvm:$ktor_version")

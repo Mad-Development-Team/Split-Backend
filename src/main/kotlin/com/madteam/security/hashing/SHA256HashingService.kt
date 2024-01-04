@@ -11,7 +11,7 @@ class SHA256HashingService: HashingService {
         val salt = SecureRandom.getInstance(SHA1_ALGORITHM)
             .generateSeed(saltLength)
         val saltAsHex = Hex.encodeHexString(salt)
-        val hash = DigestUtils.sha256Hex("$salt$value")
+        val hash = DigestUtils.sha256Hex("$saltAsHex$value")
         return SaltedHash(
             hash = hash,
             salt = saltAsHex

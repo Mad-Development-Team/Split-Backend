@@ -11,12 +11,13 @@ private const val MAX_DATE_LENGTH = 512
 
 object UserTable : Table() {
 
-    val id = integer("id")
+    val id = integer("id").autoIncrement()
     val email = varchar("email", length = MAX_EMAIL_LENGTH)
     val name = varchar("name", length = MAX_NAME_LENGTH)
-    val profileImage = varchar("profile_image", length = MAX_PROFILE_IMAGE_LENGTH)
+    val profileImage = varchar("profile_image", length = MAX_PROFILE_IMAGE_LENGTH).nullable()
     val createdDate = varchar("created_date", MAX_DATE_LENGTH)
     val passwordHash = varchar("password_hash", length = MAX_HASH_PASSWORD_LENGTH)
+    val passwordSalt = varchar("password_salt", length = MAX_HASH_PASSWORD_LENGTH)
 
     override val primaryKey: PrimaryKey
         get() = PrimaryKey(id)
