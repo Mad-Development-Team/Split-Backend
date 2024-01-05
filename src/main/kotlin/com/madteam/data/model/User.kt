@@ -1,7 +1,5 @@
 package com.madteam.data.model
 
-import java.sql.Date
-
 data class User(
     val id: Int? = null,
     val name: String,
