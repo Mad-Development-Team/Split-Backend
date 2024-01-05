@@ -31,6 +31,7 @@ fun Application.module() {
     val hashingService = SHA256HashingService()
 
     DatabaseFactory.init()
+    configureSwagger()
     configureSecurity(tokenConfig)
     configureSerialization()
     configureRouting(

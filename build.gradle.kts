@@ -5,6 +5,7 @@ val postgresql_version: String by project
 val hikari_version: String by project
 val exposed_version: String by project
 val commons_codec_version: String by project
+val swagger_ui_version: String by project
 
 plugins {
     application
@@ -55,6 +56,9 @@ dependencies {
     implementation("io.ktor:ktor-server-auth-jwt-jvm:$ktor_version")
 
     implementation("commons-codec:commons-codec:$commons_codec_version")
+
+    //Swagger
+    implementation("io.github.smiley4:ktor-swagger-ui:$swagger_ui_version")
 
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
