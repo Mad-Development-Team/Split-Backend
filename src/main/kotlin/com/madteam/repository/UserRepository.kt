@@ -11,17 +11,28 @@ import java.util.Date
 
 class UserRepository {
 
-    suspend fun addUser(newUser: User){
-        dbQuery {
-            UserTable.insert {userTable ->
-                userTable[UserTable.id] = newUser.id
-                userTable[UserTable.name] = newUser.name
-                userTable[UserTable.email] = newUser.email
-                userTable[UserTable.createdDate] = newUser.createdDate
-                userTable[UserTable.passwordHash] = newUser.passwordHash
-                userTable[UserTable.profileImage] = newUser.profileImage
+    suspend fun addUser(newUser: User): Boolean {
+        return try {
+            dbQuery {
+                UserTable.insert { userTable ->
+                    userTable[UserTable.name] = newUser.name
+                    userTable[UserTable.email] = newUser.email
+                    userTable[UserTable.createdDate] = newUser.createdDate
+                    userTable[UserTable.passwordHash] = newUser.passwordHash
+                    userTable[UserTable.passwordSalt] = newUser.passwordSalt
+                    userTable[UserTable.profileImage] = newUser.profileImage
+                }
             }
+            true
+        } catch (e: Exception) {
+            false
         }
+    }
+
+    suspend fun getUserByEmail(email: String) = dbQuery {
+        UserTable.select { UserTable.email eq email }
+            .map { rowToUser(it) }
+            .singleOrNull()
     }
 
     suspend fun findUserById(id: Int) = dbQuery {
@@ -40,8 +51,9 @@ class UserRepository {
             name = row[UserTable.name],
             email = row[UserTable.email],
             passwordHash = row[UserTable.passwordHash],
-            profileImage = row[UserTable.passwordHash],
-            createdDate = row[UserTable.createdDate]
+            profileImage = row[UserTable.profileImage],
+            createdDate = row[UserTable.createdDate],
+            passwordSalt = row[UserTable.passwordSalt]
         )
     }
 
