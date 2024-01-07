@@ -49,6 +49,12 @@ fun Route.signUp(
             createdDate = Date().toString()
         )
 
+        val userExist = UserRepository().getUserByEmail(user.email)
+        if (userExist != null){
+            call.respond(HttpStatusCode.Conflict, "Email already registered")
+            return@post
+        }
+
         val userInserted = UserRepository().addUser(user)
         if (!userInserted){
             call.respond(HttpStatusCode.Conflict)
