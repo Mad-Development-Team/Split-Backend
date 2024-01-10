@@ -1,9 +1,6 @@
 package com.madteam.plugins
 
-import com.madteam.routes.authenticate
-import com.madteam.routes.getSecretInfo
-import com.madteam.routes.signIn
-import com.madteam.routes.signUp
+import com.madteam.routes.*
 import com.madteam.security.hashing.HashingService
 import com.madteam.security.token.TokenConfig
 import com.madteam.security.token.TokenService
@@ -25,6 +22,7 @@ fun Application.configureRouting(
             hashingService = hashingService
         )
         authenticate()
+        getUserInfo()
         getSecretInfo()
     }
 }
