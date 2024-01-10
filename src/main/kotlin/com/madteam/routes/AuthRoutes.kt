@@ -94,7 +94,6 @@ fun Route.signIn(
         )
 
         if (!isValidPassword) {
-            println("Entered hash: ${DigestUtils.sha256Hex("${user.passwordSalt}${request.password}")}, Hashed PW: ${user.passwordHash}")
             call.respond(HttpStatusCode.Conflict, "Invalid username or password")
             return@post
         }
