@@ -24,5 +24,7 @@ fun Application.configureRouting(
         authenticate()
         getUserInfo()
         getSecretInfo()
+        updateUserInfo()
+        removeProfileImage()
     }
 }
