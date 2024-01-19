@@ -3,13 +3,7 @@ package com.madteam.repository
 import com.madteam.data.model.User
 import com.madteam.data.table.UserTable
 import com.madteam.repository.DatabaseFactory.dbQuery
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.update
-import java.time.DateTimeException
-import java.util.Date
+import org.jetbrains.exposed.sql.*
 
 class UserRepository {
 
@@ -69,13 +63,13 @@ class UserRepository {
     }
 
     suspend fun getUserByEmail(email: String) = dbQuery {
-        UserTable.select { UserTable.email eq email }
+        UserTable.selectAll().where { UserTable.email eq email }
             .map { rowToUser(it) }
             .singleOrNull()
     }
 
     suspend fun findUserById(id: Int) = dbQuery {
-        UserTable.select { UserTable.id.eq(id) }
+        UserTable.selectAll().where { UserTable.id.eq(id) }
             .map { rowToUser(it) }
             .singleOrNull()
     }
@@ -86,7 +80,6 @@ class UserRepository {
         }
 
         return User(
-            id = row[UserTable.id],
             name = row[UserTable.name],
             email = row[UserTable.email],
             passwordHash = row[UserTable.passwordHash],

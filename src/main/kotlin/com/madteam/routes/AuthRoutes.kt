@@ -4,6 +4,7 @@ import com.madteam.data.model.User
 import com.madteam.data.request.SignInAuthRequest
 import com.madteam.data.request.SignUpAuthRequest
 import com.madteam.data.response.AuthResponse
+import com.madteam.getCurrentDateTime
 import com.madteam.repository.UserRepository
 import com.madteam.routes.authenticate
 import com.madteam.security.hashing.HashingService
@@ -46,7 +47,7 @@ fun Route.signUp(
             email = request.email,
             name = request.name,
             profileImage = null,
-            createdDate = Date().toString()
+            createdDate = getCurrentDateTime()
         )
 
         val userExist = UserRepository().getUserByEmail(user.email)
