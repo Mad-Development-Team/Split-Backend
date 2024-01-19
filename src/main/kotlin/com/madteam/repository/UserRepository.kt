@@ -69,7 +69,7 @@ class UserRepository {
     }
 
     suspend fun findUserById(id: Int) = dbQuery {
-        UserTable.selectAll().where { UserTable.id.eq(id) }
+        UserTable.selectAll().where { UserTable.id eq id }
             .map { rowToUser(it) }
             .singleOrNull()
     }
@@ -80,6 +80,7 @@ class UserRepository {
         }
 
         return User(
+            id = row[UserTable.id].value,
             name = row[UserTable.name],
             email = row[UserTable.email],
             passwordHash = row[UserTable.passwordHash],

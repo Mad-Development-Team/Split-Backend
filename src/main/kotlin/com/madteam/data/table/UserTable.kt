@@ -20,5 +20,4 @@ object UserTable : IntIdTable(
     val passwordHash = varchar("password_hash", length = MAX_HASH_PASSWORD_LENGTH)
     val passwordSalt = varchar("password_salt", length = MAX_HASH_PASSWORD_LENGTH)
 
-
 }
