@@ -2,6 +2,7 @@ package com.madteam.repository
 
 import com.madteam.data.model.Group
 import com.madteam.data.table.GroupTable
+import com.madteam.data.table.MemberTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -47,4 +48,14 @@ class GroupRepository {
                 .empty()
         }
     }
+
+    fun getUserGroups(userId: Int): List<Group> {
+        return transaction {
+            GroupTable.selectAll().where { GroupTable.id inList MemberTable.selectAll()
+                .where { MemberTable.user eq userId }.map { it[MemberTable.groupId] } }
+                .mapNotNull { toGroup(it) }
+        }
+    }
+
+
 }

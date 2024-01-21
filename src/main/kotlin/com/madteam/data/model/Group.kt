@@ -10,5 +10,6 @@ data class Group(
     val createdDate: String,
     val inviteCode: String? = null,
     val image: String? = null,
-    val bannerImage: String? = null
+    val bannerImage: String? = null,
+    val members: List<Member>? = null
 )

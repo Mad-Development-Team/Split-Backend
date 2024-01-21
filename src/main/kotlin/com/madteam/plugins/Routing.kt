@@ -27,5 +27,6 @@ fun Application.configureRouting(
         updateUserInfo()
         removeProfileImage()
         createNewGroup()
+        getUserGroups()
     }
 }

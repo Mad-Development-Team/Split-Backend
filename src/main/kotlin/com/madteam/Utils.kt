@@ -21,8 +21,10 @@ fun getCurrentDateTime(): String {
     return current.format(formatter)
 }
 
-fun getRandomHexColor(): String {
+fun getRandomColorInHex(): String {
     val random = Random()
-    val nextInt = random.nextInt(0xffffff + 1)
-    return String.format("0x%08X", nextInt)
+    val red = random.nextInt(256)
+    val green = random.nextInt(256)
+    val blue = random.nextInt(256)
+    return String.format("%02X%02X%02X", red, green, blue)
 }

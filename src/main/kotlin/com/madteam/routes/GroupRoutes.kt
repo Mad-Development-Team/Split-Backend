@@ -3,15 +3,12 @@ package com.madteam.routes
 import com.madteam.data.model.Group
 import com.madteam.data.model.Member
 import com.madteam.data.request.CreateNewGroupRequest
-import com.madteam.data.request.UpdateUserInfoRequest
 import com.madteam.data.response.CreateNewGroupResponse
-import com.madteam.data.table.GroupTable
 import com.madteam.generateInviteCode
 import com.madteam.getCurrentDateTime
-import com.madteam.getRandomHexColor
+import com.madteam.getRandomColorInHex
 import com.madteam.repository.GroupRepository
 import com.madteam.repository.MemberRepository
-import com.madteam.repository.UserRepository
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -19,10 +16,6 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import org.jetbrains.exposed.sql.insertAndGetId
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.transactions.transaction
-import java.util.*
 
 fun Route.createNewGroup() {
     val groupRepository = GroupRepository()
@@ -43,14 +36,16 @@ fun Route.createNewGroup() {
             } while (!groupRepository.isInviteCodeUnique(inviteCode))
 
             val newGroup: Group = try {
-                groupRepository.createGroup(Group(
-                    groupName = request.groupName,
-                    groupDescription = request.groupDescription,
-                    inviteCode = inviteCode,
-                    image = null,
-                    bannerImage = null,
-                    createdDate = getCurrentDateTime()
-                ))
+                groupRepository.createGroup(
+                    Group(
+                        groupName = request.groupName,
+                        groupDescription = request.groupDescription,
+                        inviteCode = inviteCode,
+                        image = null,
+                        bannerImage = null,
+                        createdDate = getCurrentDateTime()
+                    )
+                )
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.InternalServerError, "Error creating group")
                 return@post
@@ -58,7 +53,7 @@ fun Route.createNewGroup() {
 
             try {
                 request.membersList.forEach { member ->
-                    val color = member.color ?: getRandomHexColor()
+                    val color = member.color ?: getRandomColorInHex()
                     val newMember = Member(
                         name = member.name,
                         profileImage = member.profileImage,
@@ -85,6 +80,40 @@ fun Route.createNewGroup() {
             )
 
             call.respond(HttpStatusCode.OK, response)
+        }
+    }
+}
+
+fun Route.getUserGroups() {
+    val groupRepository = GroupRepository()
+    val memberRepository = MemberRepository()
+
+    authenticate {
+        get("getUserGroups") {
+            val principal = call.principal<JWTPrincipal>()
+            val userId = principal?.getClaim("userId", String::class)?.toIntOrNull()
+
+            if (userId != null) {
+                val groups = groupRepository.getUserGroups(userId)
+
+                val response = groups.map { group ->
+                    val members =
+                        memberRepository.getGroupMembers(group.id ?: throw IllegalStateException("Group ID is null"))
+                    Group(
+                        id = group.id,
+                        groupName = group.groupName,
+                        groupDescription = group.groupDescription,
+                        createdDate = group.createdDate,
+                        inviteCode = group.inviteCode,
+                        image = group.image,
+                        bannerImage = group.bannerImage,
+                        members = members
+                    )
+                }
+                call.respond(HttpStatusCode.OK, response)
+            } else {
+                call.respond(HttpStatusCode.Unauthorized, "Unauthorized")
+            }
         }
     }
 }
