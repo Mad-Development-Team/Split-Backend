@@ -5,6 +5,7 @@ import com.madteam.data.table.MemberTable
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class MemberRepository {
@@ -36,9 +37,16 @@ class MemberRepository {
             id = row[MemberTable.id].value,
             name = row[MemberTable.name],
             profileImage = row[MemberTable.profileImage],
-            user = 0,
+            user = row[MemberTable.user]?.value,
             color = row[MemberTable.color],
             joinedDate = row[MemberTable.joinedDate],
             groupId = row[MemberTable.groupId]
         )
+
+    fun getGroupMembers(groupId: Int): List<Member> {
+        return transaction {
+            MemberTable.selectAll().where { MemberTable.groupId eq groupId }
+                .mapNotNull { toMember(it) }
+        }
+    }
 }
