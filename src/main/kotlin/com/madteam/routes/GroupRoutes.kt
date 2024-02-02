@@ -43,7 +43,8 @@ fun Route.createNewGroup() {
                         inviteCode = inviteCode,
                         image = null,
                         bannerImage = null,
-                        createdDate = getCurrentDateTime()
+                        createdDate = getCurrentDateTime(),
+                        currency = request.currency
                     )
                 )
             } catch (e: Exception) {
@@ -107,7 +108,8 @@ fun Route.getUserGroups() {
                         inviteCode = group.inviteCode,
                         image = group.image,
                         bannerImage = group.bannerImage,
-                        members = members
+                        members = members,
+                        currency = group.currency
                     )
                 }
                 call.respond(HttpStatusCode.OK, response)

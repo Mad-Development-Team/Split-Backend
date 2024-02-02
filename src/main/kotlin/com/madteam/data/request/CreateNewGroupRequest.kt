@@ -7,5 +7,6 @@ import kotlinx.serialization.Serializable
 data class CreateNewGroupRequest(
     val groupName: String,
     val groupDescription: String?,
-    val membersList: List<Member>
+    val membersList: List<Member>,
+    val currency: String
 )
