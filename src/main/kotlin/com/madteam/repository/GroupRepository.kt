@@ -14,10 +14,11 @@ class GroupRepository {
             GroupTable.insertAndGetId {
                 it[groupName] = group.groupName
                 it[groupDescription] = group.groupDescription
-                it[inviteCode] = group.inviteCode ?: ""
+                it[inviteCode] = group.inviteCode
                 it[image] = group.image
                 it[bannerImage] = group.bannerImage
                 it[createdDate] = group.createdDate
+                it[currency] = group.currency
             }
         }
         return getGroupById(insertedId.value) ?: throw IllegalStateException("Group not found after creation")
