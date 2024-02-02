@@ -10,5 +10,6 @@ data class CreateNewGroupResponse(
     val createdDate: String,
     val inviteCode: String,
     val image: String? = null,
-    val bannerImage: String? = null
+    val bannerImage: String? = null,
+    val currency: String
 )

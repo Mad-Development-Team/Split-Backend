@@ -75,9 +75,10 @@ fun Route.createNewGroup() {
                 groupName = newGroup.groupName,
                 groupDescription = newGroup.groupDescription,
                 createdDate = newGroup.createdDate,
-                inviteCode = newGroup.inviteCode!!,
+                inviteCode = newGroup.inviteCode,
                 image = newGroup.image,
-                bannerImage = newGroup.bannerImage
+                bannerImage = newGroup.bannerImage,
+                currency = newGroup.currency
             )
 
             call.respond(HttpStatusCode.OK, response)
