@@ -9,6 +9,7 @@ private const val MAX_GROUP_DESCRIPTION_LENGTH = 25
 private const val MAX_DATE_LENGTH = 512
 private const val MAX_INVITE_CODE_LENGTH = 7
 private const val MAX_PROFILE_IMAGE_LENGTH = 2097152
+private const val MAX_CURRENCY_LENGTH = 512
 
 object GroupTable : IntIdTable(
     name = "group"
@@ -19,4 +20,5 @@ object GroupTable : IntIdTable(
     val image = varchar("image", length = MAX_PROFILE_IMAGE_LENGTH).nullable()
     val bannerImage = varchar("banner_image", length = MAX_PROFILE_IMAGE_LENGTH).nullable()
     val createdDate = varchar("created_date", MAX_DATE_LENGTH)
+    val currency = varchar("currency", length = MAX_CURRENCY_LENGTH)
 }

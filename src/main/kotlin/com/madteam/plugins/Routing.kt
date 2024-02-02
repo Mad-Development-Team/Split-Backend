@@ -28,5 +28,6 @@ fun Application.configureRouting(
         removeProfileImage()
         createNewGroup()
         getUserGroups()
+        getCurrencies()
     }
 }

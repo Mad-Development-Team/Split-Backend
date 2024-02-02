@@ -39,7 +39,8 @@ class GroupRepository {
             inviteCode = row[GroupTable.inviteCode],
             image = row[GroupTable.image],
             bannerImage = row[GroupTable.bannerImage],
-            createdDate = row[GroupTable.createdDate]
+            createdDate = row[GroupTable.createdDate],
+            currency = row[GroupTable.currency]
         )
 
     fun isInviteCodeUnique(inviteCode: String): Boolean {
