@@ -1,5 +1,6 @@
 package com.madteam.data.response
 
+import com.madteam.data.model.Currency
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -11,5 +12,5 @@ data class CreateNewGroupResponse(
     val inviteCode: String,
     val image: String? = null,
     val bannerImage: String? = null,
-    val currency: String
+    val currency: Currency
 )

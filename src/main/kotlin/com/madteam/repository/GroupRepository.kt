@@ -8,6 +8,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 
 class GroupRepository {
+    private val currencyRepository = CurrencyRepository()
 
     fun createGroup(group: Group): Group {
         val insertedId = transaction {
@@ -18,7 +19,7 @@ class GroupRepository {
                 it[image] = group.image
                 it[bannerImage] = group.bannerImage
                 it[createdDate] = group.createdDate
-                it[currency] = group.currency
+                it[currency] = group.currency.currency
             }
         }
         return getGroupById(insertedId.value) ?: throw IllegalStateException("Group not found after creation")
@@ -41,7 +42,7 @@ class GroupRepository {
             image = row[GroupTable.image],
             bannerImage = row[GroupTable.bannerImage],
             createdDate = row[GroupTable.createdDate],
-            currency = row[GroupTable.currency]
+            currency = currencyRepository.getCurrencyByCode(row[GroupTable.currency]) ?: throw IllegalStateException("Currency not found")
         )
 
     fun isInviteCodeUnique(inviteCode: String): Boolean {

@@ -12,5 +12,5 @@ data class Group(
     val image: String? = null,
     val bannerImage: String? = null,
     val members: List<Member>? = null,
-    val currency: String
+    val currency: Currency
 )
