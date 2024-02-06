@@ -28,6 +28,7 @@ fun Application.configureRouting(
         removeProfileImage()
         createNewGroup()
         getUserGroups()
+        getGroupExpenseTypes()
         getCurrencies()
     }
 }
