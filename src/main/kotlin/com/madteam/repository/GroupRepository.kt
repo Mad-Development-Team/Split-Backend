@@ -1,9 +1,13 @@
 package com.madteam.repository
 
+import com.madteam.data.model.ExpenseType
 import com.madteam.data.model.Group
+import com.madteam.data.table.ExpenseTypeTable
 import com.madteam.data.table.GroupTable
 import com.madteam.data.table.MemberTable
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNull
 import org.jetbrains.exposed.sql.transactions.transaction
 
 
@@ -32,6 +36,21 @@ class GroupRepository {
                 .singleOrNull()
         }
     }
+
+    fun getGroupExpenseTypes(groupId: Int): List<ExpenseType> {
+        return transaction {
+            ExpenseTypeTable.selectAll()
+                .where { (ExpenseTypeTable.group.isNull()) or (ExpenseTypeTable.group eq groupId) }.mapNotNull { toExpenseType(it) }
+        }
+    }
+
+    private fun toExpenseType(row: ResultRow): ExpenseType =
+        ExpenseType(
+            id = row[ExpenseTypeTable.id].value,
+            title = row[ExpenseTypeTable.title],
+            icon = row[ExpenseTypeTable.icon],
+            group = row[ExpenseTypeTable.group]
+        )
 
     private fun toGroup(row: ResultRow): Group =
         Group(

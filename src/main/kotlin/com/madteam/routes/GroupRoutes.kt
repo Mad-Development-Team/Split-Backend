@@ -120,3 +120,19 @@ fun Route.getUserGroups() {
         }
     }
 }
+
+fun Route.getGroupExpenseTypes() {
+    val groupRepository = GroupRepository()
+
+    authenticate {
+        get("getGroupExpenseTypes") {
+            val groupId = call.request.queryParameters["groupId"]?.toIntOrNull()
+            if (groupId != null) {
+                val expenseTypes = groupRepository.getGroupExpenseTypes(groupId)
+                call.respond(HttpStatusCode.OK, expenseTypes)
+            } else {
+                call.respond(HttpStatusCode.Unauthorized, "Unauthorized")
+            }
+        }
+    }
+}
