@@ -30,5 +30,6 @@ fun Application.configureRouting(
         getUserGroups()
         getGroupExpenseTypes()
         getCurrencies()
+        createNewExpense()
     }
 }
