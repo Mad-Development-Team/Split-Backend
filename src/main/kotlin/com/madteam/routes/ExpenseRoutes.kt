@@ -72,18 +72,14 @@ fun Route.createNewExpense(){
                 realtimeRepository.updateGroupRealtime(createdExpense.groupId)
                 call.respond(HttpStatusCode.OK, response)
             } catch (e: Exception) {
-                if (newExpenseTypeCreated != 0) {
-                    try {
-                        expenseRepository.deleteExpenseType(newExpenseTypeCreated)
-                    } catch (e: Exception) {
-                        call.respond(HttpStatusCode.InternalServerError, "Error deleting expense type")
-                        return@post
-                    }
-                }
                 try {
+                    print(e.message)
                     expenseRepository.deletePaidByExpense(createdExpense.id)
                     expenseRepository.deleteMemberExpenses(createdExpense.id)
                     expenseRepository.deleteExpense(createdExpense.id)
+                    if (newExpenseTypeCreated != 0) {
+                        expenseRepository.deleteExpenseType(newExpenseTypeCreated)
+                    }
                 } catch (e: Exception) {
                     call.respond(HttpStatusCode.InternalServerError, "Error deleting expense")
                     return@post
