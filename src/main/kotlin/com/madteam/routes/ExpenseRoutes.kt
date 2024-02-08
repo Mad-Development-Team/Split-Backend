@@ -3,6 +3,7 @@ package com.madteam.routes
 import com.madteam.data.model.Expense
 import com.madteam.repository.BalanceRepository
 import com.madteam.repository.ExpenseRepository
+import com.madteam.repository.RealtimeRepository
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -13,6 +14,7 @@ import io.ktor.server.routing.*
 fun Route.createNewExpense(){
     val expenseRepository = ExpenseRepository()
     val balanceRepository = BalanceRepository()
+    val realtimeRepository = RealtimeRepository()
 
     authenticate {
         post("createNewExpense"){
@@ -67,6 +69,7 @@ fun Route.createNewExpense(){
             try {
                 val response = balanceRepository.getBalances(mergedExpensesList)
                 expenseRepository.updateBalances(response)
+                realtimeRepository.updateGroupRealtime(createdExpense.groupId)
                 call.respond(HttpStatusCode.OK, response)
             } catch (e: Exception) {
                 if (newExpenseTypeCreated != 0) {
