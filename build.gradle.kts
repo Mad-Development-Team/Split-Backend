@@ -25,8 +25,15 @@ application {
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
 }
 
+configurations.all {
+    resolutionStrategy {
+        force("com.google.guava:guava:30.1-jre")
+    }
+}
+
 repositories {
     mavenCentral()
+    google()
 }
 
 dependencies {
@@ -71,8 +78,6 @@ dependencies {
 
     //Firebase
     implementation("com.google.firebase:firebase-admin:$firebase_admin_version")
-
-
 
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
