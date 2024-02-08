@@ -2,6 +2,7 @@ package com.madteam.repository
 
 import com.madteam.data.model.*
 import com.madteam.data.table.*
+import com.madteam.getCurrentDateTime
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -16,7 +17,7 @@ class ExpenseRepository {
                 it[totalAmount] = newExpense.totalAmount
                 it[images] = newExpense.images?.joinToString(",")
                 it[paymentMethod] = newExpense.paymentMethod
-                it[createdDate] = newExpense.createdDate
+                it[createdDate] = getCurrentDateTime()
                 it[groupId] = newExpense.groupId
                 it[currency] = newExpense.currency.currency
                 it[expenseType] = newExpense.expenseType.id
