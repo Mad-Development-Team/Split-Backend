@@ -6,6 +6,7 @@ val hikari_version: String by project
 val exposed_version: String by project
 val commons_codec_version: String by project
 val swagger_ui_version: String by project
+val firebase_admin_version: String by project
 
 plugins {
     application
@@ -67,6 +68,9 @@ dependencies {
     implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
     implementation("io.ktor:ktor-client-serialization:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
+
+    //Firebase
+    implementation("com.google.firebase:firebase-admin:$firebase_admin_version")
 
 
 
