@@ -90,3 +90,23 @@ fun Route.createNewExpense(){
         }
     }
 }
+
+fun Route.getGroupExpenses(){
+    val expenseRepository = ExpenseRepository()
+
+    authenticate {
+        get("getGroupExpenses"){
+            val groupId = call.request.queryParameters["groupId"]?.toIntOrNull()
+                ?: return@get call.respond(HttpStatusCode.BadRequest, "Missing or malformed groupId")
+
+            val groupExpenses = try {
+                expenseRepository.getGroupExpenses(groupId)
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.InternalServerError, "Error obtaining group expenses")
+                return@get
+            }
+
+            call.respond(HttpStatusCode.OK, groupExpenses)
+        }
+    }
+}

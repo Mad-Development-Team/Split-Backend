@@ -31,5 +31,6 @@ fun Application.configureRouting(
         getGroupExpenseTypes()
         getCurrencies()
         createNewExpense()
+        getGroupExpenses()
     }
 }
