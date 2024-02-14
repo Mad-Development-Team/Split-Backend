@@ -59,6 +59,52 @@ class ExpenseRepository {
         return getExpenseById(insertedId.value) ?: throw IllegalStateException("Expense not found after creation")
     }
 
+    fun updateExpense(expense: Expense): Expense {
+        transaction {
+            ExpenseTable.update({ ExpenseTable.id eq expense.id }) {
+                it[expenseTitle] = expense.expenseTitle
+                it[expenseDescription] = expense.expenseDescription
+                it[totalAmount] = expense.totalAmount
+                it[images] = expense.images?.joinToString(",")
+                it[paymentMethod] = expense.paymentMethod
+                it[groupId] = expense.groupId
+                it[currency] = expense.currency.currency
+                it[expenseType] = expense.expenseType.id
+            }
+        }
+        try {
+            transaction {
+                PaidByExpenseTable.deleteWhere { expenseId eq expense.id }
+                expense.paidBy.forEach { paidBy ->
+                    PaidByExpenseTable.insert {
+                        it[expenseId] = expense.id
+                        it[memberId] = paidBy.memberId
+                        it[paidAmount] = paidBy.amount
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            throw e
+        }
+        try {
+            transaction {
+                MemberExpensesTable.deleteWhere { expenseId eq expense.id }
+                expense.forWhom.forEach { forWhom ->
+                    MemberExpensesTable.insert {
+                        it[expenseId] = expense.id
+                        it[memberId] = forWhom.memberId
+                        it[paidAmount] = forWhom.amount
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            throw e
+        }
+        return getExpenseById(expense.id) ?: throw IllegalStateException("Expense not found after update")
+    }
+
+
+
     fun createExpenseType(newExpenseType: ExpenseType): Int {
         val expenseTypeId =  transaction {
             ExpenseTypeTable.insertAndGetId {
@@ -154,6 +200,12 @@ class ExpenseRepository {
     }
 
     fun deleteExpense(id: Int) {
+        transaction {
+            PaidByExpenseTable.deleteWhere { expenseId eq id }
+        }
+        transaction {
+            MemberExpensesTable.deleteWhere { expenseId eq id }
+        }
         transaction {
             ExpenseTable.deleteWhere { ExpenseTable.id eq id }
         }
