@@ -34,5 +34,6 @@ fun Application.configureRouting(
         editExpense()
         deleteExpense()
         getGroupExpenses()
+        getGroupBalances()
     }
 }
