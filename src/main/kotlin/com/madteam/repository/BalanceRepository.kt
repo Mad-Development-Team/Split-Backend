@@ -2,6 +2,7 @@ package com.madteam.repository
 
 import com.madteam.data.model.Balance
 import com.madteam.data.model.Expense
+import com.madteam.data.table.BalanceTable
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
@@ -12,6 +13,9 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.double
 import kotlinx.serialization.json.jsonPrimitive
+import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.transactions.transaction
 
 class BalanceRepository {
 
@@ -37,6 +41,7 @@ class BalanceRepository {
             val balanceResponse = Json.decodeFromString<Map<String, List<List<JsonElement>>>>(responseBody)
             return balanceResponse["balance"]!!.map { balanceItem ->
                 Balance(
+                    id = 0,
                     groupId = groupId,
                     payMemberId = balanceItem[2].jsonPrimitive.content.toInt(),
                     receiverMemberId = balanceItem[0].jsonPrimitive.content.toInt(),
@@ -65,4 +70,19 @@ class BalanceRepository {
         return Json.encodeToString(requestBody)
     }
 
+    fun getGroupBalances(groupId: Int): List<Balance> {
+        return transaction {
+            BalanceTable.selectAll().where { BalanceTable.groupId eq groupId }
+                .mapNotNull { toBalance(it) }
+        }
+    }
+
+    fun toBalance(row: ResultRow): Balance =
+        Balance(
+            id = row[BalanceTable.id].value,
+            groupId = row[BalanceTable.groupId],
+            payMemberId = row[BalanceTable.payMemberId],
+            receiverMemberId = row[BalanceTable.receiverMemberId],
+            amount = row[BalanceTable.amount]
+        )
 }
